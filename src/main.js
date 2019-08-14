@@ -83,12 +83,29 @@ const fetchProject = (to, from, next) => {
   });
 };
 
+const fetchUser = function(to, from, next) {
+  Vue.prototype.$api.getUser(to.params.username, function(err, user) {
+    if(user) {
+      state.dispatch('setProfile', user).then(() => {
+        next();
+      });
+    } else {
+      next('/404');
+    }
+  });
+}
+
 const routes = [
   { path: '/', component: Home },
-  { path: '/projects', component: ProjectList },
-  { path: '/projects/create', component: CreateProject, beforeEnter: requireAuth },
+  { 
+    path: '/projects',
+    component: ProjectList,
+    children: [
+      { path: 'create', component: CreateProject, beforeEnter: requireAuth },
+    ]
+  },
   { path: '/login', component: Login },
-  { path: '/u/:username', component: UserPage },
+  { path: '/u/:username', component: UserPage, beforeEnter: fetchUser },
   { path: '/create-account', component: CreateAccount },
   {
     path: '/p/:username/:project',

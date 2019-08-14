@@ -1,36 +1,15 @@
-
-</templa
-</template>
-Getters user-page',
-    profle: null,
-  i  projets: [
-  data: () => ({
-} from 'vuex';
-
-exp  }),
-}
-</script;>cts: [],
-  }),
-};
-</script>ct: [], )
-};/script>
->
-
-
-<,}
-
+<template>
+    <div>
+        <h1>test</h1>
+        <p>under construction</p>
+    </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
-  name: 'user-page',
-  data: () => ({
-    profile: null,
-    projects: [],
-  }),
-};
+    name: 'user-page',
+    computed: mapGetters(['profile', 'user', 'isAuthenticated' ])
+}
 </script>
-ort default {
-  name: '

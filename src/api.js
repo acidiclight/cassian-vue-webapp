@@ -32,14 +32,14 @@ API.prototype.getUserById = function(id, cb) {
 API.prototype.getUser = function (username, cb) {
   this.get(`/users/username/${username}`)
     .then((response) => {
-      if (response.data.success) {
-        cb(null, response.data.user);
+      if (response.data.user) {
+        return cb(null, response.data.user);
       } else {
-        cb(null, false);
+        return cb(null, false);
       }
     })
     .catch((error) => {
-      cb(error, false);
+      return cb(error, false);
     });
 };
 

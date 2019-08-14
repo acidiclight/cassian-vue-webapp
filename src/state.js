@@ -8,6 +8,7 @@ const state = {
   status: '',
   user: null,
   project: null,
+  viewingProfile: null
 };
 
 function parseJwt(token) {
@@ -25,6 +26,9 @@ const mutations = {
     s.token = token;
     s.user = parseJwt(token);
   },
+  setProfile(s, profile) {
+    s.viewingProfile = profile;
+  },
   logout(s) {
     s.token = '';
     s.user = null;
@@ -38,6 +42,9 @@ const mutations = {
 const actions = {
   login(context, payload) {
     context.commit('setToken', payload);
+  },
+  setProfile(context, profile) {
+    context.commit('setProfile', profile);
   },
   logout(context) {
     context.commit('logout');
@@ -133,6 +140,7 @@ const getters = {
   isOwner,
   isAdmin,
   isDev,
+  profile (s) { return s.viewingProfile; }
 };
 
 export default new Vuex.Store({
