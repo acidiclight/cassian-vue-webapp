@@ -1,7 +1,13 @@
 <template>
     <div>
-        <h1>test</h1>
-        <p>under construction</p>
+        <b-container>
+            <b-card no-body>
+                <b-card-body v-if="profile.fullName.length">
+                    <b-card-title>{{ profile.fullName }}</b-card-title>
+                    <b-card-sub-title>{{ profile.username }}</b
+                </b-card-body>
+            </b-card>
+        </b-container>
     </div>
 </template>
 

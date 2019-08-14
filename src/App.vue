@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="theme()">
     <b-navbar toggleable="lg" type="dark" variant="dark" sticky>
       <b-navbar-brand to="/">Project: Cassian</b-navbar-brand>
         
@@ -32,6 +32,10 @@
           <b-nav-item to="/create-account">Create account</b-nav-item>
         </b-navbar-nav>
 
+        <b-navbar-nav>
+          <b-nav-item @click="toggleInsomnia" href="#" title="Toggle dark mode"><i class="fa fas fa-adjust"></i></b-nav-item>
+        </b-navbar-nav>
+
       </b-collapse>
     </b-navbar>
     <b-container fluid v-if="$route.query.err">
@@ -43,16 +47,31 @@
 
 <script>
 import { mapGetters } from 'vuex';
-
-const API_URL_GETUSER = 'http://localhost:3000/auth/userinfo';
+import 'font-awesome/css/font-awesome.css';
 
 export default {
   name: 'app',
-  computed: mapGetters(['isAuthenticated', 'user', 'userDisplayName']),
+  computed: mapGetters(['isAuthenticated', 'user', 'userDisplayName', 'darkMode']),
   mounted() {
     this.$store.dispatch('validateUser');
+    this.setDarkMode();
+  },
+  watch: {
+    darkMode(to, from) {
+      this.setDarkMode();
+    }
   },
   methods: {
+    setDarkMode() {
+      if(this.darkMode) {
+        document.getElementsByTagName('body').item(0).className = 'theme-dark';
+      } else {
+        document.getElementsByTagName('body').item(0).className = 'theme-light';
+      }
+    },
+    toggleInsomnia() {
+        this.$store.dispatch('toggleDarkMode');
+    },
     getError() {
       switch (this.$route.query.err) {
         case 'notAdmin':
@@ -66,6 +85,9 @@ export default {
           break;
       }
     },
+    theme() {
+      return this.darkMode ? 'theme-dark' : 'theme-light';
+    }
   },
 };
 </script>

@@ -8,7 +8,8 @@ const state = {
   status: '',
   user: null,
   project: null,
-  viewingProfile: null
+  viewingProfile: null,
+  darkMode: !!localStorage.getItem('darkMode'),
 };
 
 function parseJwt(token) {
@@ -26,6 +27,14 @@ const mutations = {
     s.token = token;
     s.user = parseJwt(token);
   },
+  toggleDarkMode(s) {
+    s.darkMode = !s.darkMode;
+    if(s.darkMode) {
+      localStorage.setItem('darkMode', 'insomnia');
+    } else {
+      localStorage.removeItem('darkMode');
+    }
+  },
   setProfile(s, profile) {
     s.viewingProfile = profile;
   },
@@ -42,6 +51,9 @@ const mutations = {
 const actions = {
   login(context, payload) {
     context.commit('setToken', payload);
+  },
+  toggleDarkMode(context) {
+    context.commit('toggleDarkMode');
   },
   setProfile(context, profile) {
     context.commit('setProfile', profile);
@@ -140,7 +152,8 @@ const getters = {
   isOwner,
   isAdmin,
   isDev,
-  profile (s) { return s.viewingProfile; }
+  profile (s) { return s.viewingProfile; },
+  darkMode(s) { return s.darkMode; }
 };
 
 export default new Vuex.Store({

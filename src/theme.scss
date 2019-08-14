@@ -4,4 +4,17 @@
 
 /* theme variables go here */
 
+$theme-dark-bg: #222222;
+$theme-light-bg: #fff;
+
+/* Style overrides */
+body {
+    &.theme-dark {
+        background: $theme-dark-bg;
+    }
+    &.theme-light {
+        background: $theme-light-bg;
+    }
+}
+
 @import 'node_modules/bootstrap-vue/src/index.scss';
