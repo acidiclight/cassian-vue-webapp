@@ -28,48 +28,45 @@
 
 <script>
 export default {
-    name: "create-project",
-    data: () => ({
-        form: {
-            name: "",
-            about: "",
-            isPublic: 'true',
-            allowSuggestions: 'true'
-        },
-        errors: [],
-        hasErrors: false,
-        isBusy: false
-    }),
-    methods: {
-        onSubmit(evt) {
-            evt.preventDefault();
-            
-            this.errors = [];
-            this.hasErrors = false;
-            this.isBusy = true;
+  name: 'create-project',
+  data: () => ({
+    form: {
+      name: '',
+      about: '',
+      isPublic: 'true',
+      allowSuggestions: 'true',
+    },
+    errors: [],
+    hasErrors: false,
+    isBusy: false,
+  }),
+  methods: {
+    onSubmit(evt) {
+      evt.preventDefault();
 
-            const API_URL = "http://localhost:3000/projects";
+      this.errors = [];
+      this.hasErrors = false;
+      this.isBusy = true;
 
-            this.$http.post(API_URL, this.form)
-                .then((result) => {
-                    if(result.data.success)
-                    {
-                        this.isBusy = false;
-                        this.$router.replace('/' + this.$store.state.user.username + '/' + result.data.project.slug);
-                    }
-                    else
-                    {
-                        this.errors = this.data.errors;
-                        this.hasErrors = true;
-                        this.isBusy = false;
-                    }
-                })
-                .catch((error) => {
-                    this.errors = [ 'An unexpected error has occurred while creating the project.' ];
-                    this.hasErrors = true;
-                    this.isBusy = false;
-                });
-        }
-    }
-}
+      const API_URL = 'http://localhost:3000/projects';
+
+      this.$http.post(API_URL, this.form)
+        .then((result) => {
+          if (result.data.success) {
+            this.isBusy = false;
+            this.$router.replace(`/${this.$store.state.user.username}/${result.data.project.slug}`);
+          } else {
+            this.errors = this.data.errors;
+            this.hasErrors = true;
+            this.isBusy = false;
+          }
+        })
+        .catch((error) => {
+          this.errors = ['An unexpected error has occurred while creating the project.'];
+          this.hasErrors = true;
+          this.isBusy = false;
+        });
+    },
+  },
+};
 </script>

@@ -38,9 +38,9 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
+import { mapGetters } from 'vuex';
 
-const API_URL_GETUSER = "http://localhost:3000/auth/userinfo";
+const API_URL_GETUSER = 'http://localhost:3000/auth/userinfo';
 
 export default {
   name: 'app',
@@ -50,19 +50,18 @@ export default {
   },
   methods: {
     getError() {
-      switch(this.$route.query.err)
-      {
+      switch (this.$route.query.err) {
         case 'notAdmin':
-            return 'You are not an administrator of that project.';
-            break;
-          case 'notOwner':
-            return 'You do not own that project.';
-            break;
-          case 'notDev':
-            return 'You are not a developer of that project.'
-            break;
+          return 'You are not an administrator of that project.';
+          break;
+        case 'notOwner':
+          return 'You do not own that project.';
+          break;
+        case 'notDev':
+          return 'You are not a developer of that project.';
+          break;
       }
-    }
-  }
+    },
+  },
 };
 </script>

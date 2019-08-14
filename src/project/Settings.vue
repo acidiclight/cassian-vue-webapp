@@ -25,15 +25,15 @@
 import { mapGetters } from 'vuex';
 
 export default {
-    name: 'project-settings',
-    computed: mapGetters(['project', 'user', 'isAuthenticated', 'isOwner', 'isAdmin', 'isDev']),
-    methods: {
-        settingsUrl(url) {
-            return '/p/' + this.$route.params.username + '/' + this.$route.params.project + '/settings/' + url;
-        },
-        deleteProject() {
+  name: 'project-settings',
+  computed: mapGetters(['project', 'user', 'isAuthenticated', 'isOwner', 'isAdmin', 'isDev']),
+  methods: {
+    settingsUrl(url) {
+      return `/p/${this.$route.params.username}/${this.$route.params.project}/settings/${url}`;
+    },
+    deleteProject() {
 
-        }
-    }
-}
+    },
+  },
+};
 </script>

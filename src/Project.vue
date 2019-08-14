@@ -19,15 +19,15 @@
 import { mapGetters } from 'vuex';
 
 export default {
-    name: 'project',
-    computed: mapGetters(['user', 'isAuthenticated', 'project', 'isAdmin', 'isOwner']),
-    destroyed () {
-        this.$store.dispatch('forgetProject');
+  name: 'project',
+  computed: mapGetters(['user', 'isAuthenticated', 'project', 'isAdmin', 'isOwner']),
+  destroyed() {
+    this.$store.dispatch('forgetProject');
+  },
+  methods: {
+    projectUrl(url) {
+      return `/p/${this.$route.params.username}/${this.$route.params.project}${url}`;
     },
-    methods: {
-        projectUrl(url) {
-            return '/p/' + this.$route.params.username + '/' + this.$route.params.project + url;
-        }
-    },
-}
+  },
+};
 </script>

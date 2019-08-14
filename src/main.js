@@ -1,13 +1,13 @@
 import Vue from 'vue';
+import BootstrapVue from 'bootstrap-vue';
+import Vuex from 'vuex';
+import VueRouter from 'vue-router';
+import VueSimplemde from 'vue-simplemde';
 import App from './App.vue';
 import Home from './Home.vue';
 import CreateProject from './CreateProject';
-import BootstrapVue from 'bootstrap-vue';
-import Vuex from 'vuex';
 import state from './state';
 // Let's make this fucker a single-page app.
-import VueRouter from 'vue-router';
-import VueSimplemde from 'vue-simplemde';
 import CreateAccount from './CreateAccount.vue';
 import 'simplemde/dist/simplemde.min.css';
 import './theme.scss';
@@ -43,44 +43,42 @@ Vue.component('markdown', Markdown);
 Vue.config.productionTip = false;
 
 const requireAuth = (to, from, next) => {
-  state.dispatch('requireAuth', {to,from,next});
+  state.dispatch('requireAuth', { to, from, next });
 };
 
 const requireAdmin = (to, from, next) => {
-  requireAuth(to, from, function(url) {
-      if(!url) {
-        state.dispatch('requireAdmin', {to,from,next});
-      } else {
-        next(url);
-      }
+  requireAuth(to, from, (url) => {
+    if (!url) {
+      state.dispatch('requireAdmin', { to, from, next });
+    } else {
+      next(url);
+    }
   });
 };
 
 const requireOwner = (to, from, next) => {
-  state.dispatch('requireOwner', {to,from,next});
+  state.dispatch('requireOwner', { to, from, next });
 };
 
 const requireDev = (to, from, next) => {
-  state.dispatch('requireDev', {to,from,next});
+  state.dispatch('requireDev', { to, from, next });
 };
 
 const fetchProject = (to, from, next) => {
-  const API_URL = 'http://localhost:3000/projects/' + to.params.username + '/' + to.params.project;
+  const API_URL = `http://localhost:3000/projects/${to.params.username}/${to.params.project}`;
   Vue.prototype.$http.get(API_URL)
     .then((response) => {
-      if(response.data.success)
-      {
+      if (response.data.success) {
         state.dispatch('updateProject', response.data.project).then(() => {
           next();
         });
-      }
-      else {
+      } else {
         next('/404');
       }
     })
     .catch((error) => {
       next('/404');
-    })
+    });
 };
 
 const routes = [
@@ -88,7 +86,7 @@ const routes = [
   { path: '/projects/create', component: CreateProject, beforeEnter: requireAuth },
   { path: '/login', component: Login },
   { path: '/create-account', component: CreateAccount },
-  { 
+  {
     path: '/p/:username/:project',
     component: Project,
     beforeEnter: fetchProject,
@@ -97,7 +95,7 @@ const routes = [
       { path: 'gdd', component: DesignDoc },
       { path: 'tasks', component: Tasks },
       { path: 'team', component: Team },
-      { 
+      {
         path: 'settings',
         component: Settings,
         beforeEnter: requireAdmin,
@@ -105,20 +103,26 @@ const routes = [
           { path: '', component: ProjectSettingsGeneral },
           { path: 'tasks', component: ProjectSettingsTasks },
           { path: 'team', component: ProjectSettingsTeam },
-          { path: 'gdd', component: ProjectSettingsDesignDoc }
-        ]
+          { path: 'gdd', component: ProjectSettingsDesignDoc },
+        ],
       },
     ],
   },
-  { path: '/logout', beforeEnter (to, from, next) {
-    state.dispatch('logout').then(() => {
-      next('/');
-    });
-  }},
+  {
+    path: '/logout',
+    beforeEnter(to, from, next) {
+      state.dispatch('logout').then(() => {
+        next('/');
+      });
+    },
+  },
   { path: '/404', component: IAmATeapot },
-  { path: '*', beforeEnter: function(to,from,next) {
+  {
+    path: '*',
+    beforeEnter(to, from, next) {
       next('/404');
-  }}
+    },
+  },
 ];
 
 const router = new VueRouter({
@@ -126,11 +130,10 @@ const router = new VueRouter({
   routes,
 });
 
-Vue.prototype.$http.interceptors.request.use(function(config) {
+Vue.prototype.$http.interceptors.request.use((config) => {
   // get the JWT.
-  let jwt = localStorage.getItem('user-token');
-  if(jwt)
-    config.headers.Authorization = jwt;
+  const jwt = localStorage.getItem('user-token');
+  if (jwt) config.headers.Authorization = jwt;
   return config;
 });
 

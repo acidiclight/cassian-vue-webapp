@@ -61,53 +61,52 @@
 import { mapGetters } from 'vuex';
 
 export default {
-    name: 'about-project',
-    data: () => ({
-        edit: { description: '' },
-        isBusy: false,
-        errors: [],
-        hasErrors: false
-    }),
-    computed: mapGetters(['isAuthenticated', 'user', 'project', 'isOwner']),
-    methods: {
-        updateDescription() {
-            this.isBusy = true;
-            this.hasErrors = false;
-            this.errors = [];
+  name: 'about-project',
+  data: () => ({
+    edit: { description: '' },
+    isBusy: false,
+    errors: [],
+    hasErrors: false,
+  }),
+  computed: mapGetters(['isAuthenticated', 'user', 'project', 'isOwner']),
+  methods: {
+    updateDescription() {
+      this.isBusy = true;
+      this.hasErrors = false;
+      this.errors = [];
 
-            const API_URL = 'http://localhost:3000/projects/' + this.$route.params.username + '/' + this.$route.params.project + '/edit';
-            
-            this.$http.post(API_URL, { name: this.project.name, description: this.edit.description })
-                .then((response) => {
-                    if(response.data.success) {
-                        this.$store.dispatch('updateProject', response.data.project).then(() => {
-                            this.isBusy = false;
-                            this.$bvModal.hide('editDescription');
-                        });
-                    }
-                    else {
-                        this.errors = response.data.errors;
-                        this.hasErrors = true;
-                        this.isBusy = false;
-                    }
-                })
-                .catch((error) => {
-                    this.hasErrors = true;
-                    this.errors = [ 'An unknown error has occurred.' ];
-                    this.isBusy = false;
-                });
-        },
-        showEditModal() {
-            if(this.isBusy) return;
-            
+      const API_URL = `http://localhost:3000/projects/${this.$route.params.username}/${this.$route.params.project}/edit`;
+
+      this.$http.post(API_URL, { name: this.project.name, description: this.edit.description })
+        .then((response) => {
+          if (response.data.success) {
+            this.$store.dispatch('updateProject', response.data.project).then(() => {
+              this.isBusy = false;
+              this.$bvModal.hide('editDescription');
+            });
+          } else {
+            this.errors = response.data.errors;
+            this.hasErrors = true;
             this.isBusy = false;
-            this.errors = [];
-            this.hasErrors = false;
+          }
+        })
+        .catch((error) => {
+          this.hasErrors = true;
+          this.errors = ['An unknown error has occurred.'];
+          this.isBusy = false;
+        });
+    },
+    showEditModal() {
+      if (this.isBusy) return;
 
-            this.edit.description = this.project.about;
+      this.isBusy = false;
+      this.errors = [];
+      this.hasErrors = false;
 
-            this.$bvModal.show('editDescription');
-        }
-    }
-}
+      this.edit.description = this.project.about;
+
+      this.$bvModal.show('editDescription');
+    },
+  },
+};
 </script>

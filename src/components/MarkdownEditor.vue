@@ -4,8 +4,8 @@
 </template>
 
 <script>
-    export default {
-        name: 'markdown-editor',
-        props: [ 'value' ],
-    };
+export default {
+  name: 'markdown-editor',
+  props: ['value'],
+};
 </script>

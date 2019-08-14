@@ -8,7 +8,7 @@
             </div>
 
             <h1>Create an account</h1>
-            
+
             <b-form @submit="onSubmit">
                 <b-row>
                     <b-col>
@@ -67,73 +67,67 @@
 </template>
 
 <script>
-const API_URL = "http://localhost:3000/auth/create-user";
-const API_LOGIN_URL = "http://localhost:3000/auth/login";
+const API_URL = 'http://localhost:3000/auth/create-user';
+const API_LOGIN_URL = 'http://localhost:3000/auth/login';
 
 export default {
-    name: "create-account",
-    data: () => ({
-        form: {
-            email: '',
-            confirmEmail: '',
-            password: '',
-            confirmPassword: '',
-            username: ''
-        },
-        hasErrors: false,
-        errors: [],
-        isBusy: false
-    }),
-    methods: {
-        onSubmit(evt) {
-            evt.preventDefault();
+  name: 'create-account',
+  data: () => ({
+    form: {
+      email: '',
+      confirmEmail: '',
+      password: '',
+      confirmPassword: '',
+      username: '',
+    },
+    hasErrors: false,
+    errors: [],
+    isBusy: false,
+  }),
+  methods: {
+    onSubmit(evt) {
+      evt.preventDefault();
 
-            this.hasErrors = false;
-            this.isBusy = true;
-            this.errors = [];
+      this.hasErrors = false;
+      this.isBusy = true;
+      this.errors = [];
 
-            this.$http.post(API_URL, this.form)
-                .then((response) => {
-                    if(response.data.success)
-                    {
-                        // Now we need to log the user in.
-                        this.$http.post(API_LOGIN_URL, {
-                            email: this.form.email,
-                            password: this.form.password
-                        }).then((loginResponse) => {
-                            if(loginResponse.data.success)
-                            {
-                                this.$store.dispatch('login', { token: loginResponse.data.token })
-                                    .then(() => {
-                                        this.$router.replace('/');
-                                    });
-                            }
-                            else
-                            {
-                                this.isBusy = false;
-                                this.errors = [ 'A fatal error has occurred.  We have no fucking clue what the fuck just happened.' ];
-                                this.hasErrors = true;
-                            }
-                        })
-                        .catch((loginError) => {
-                            this.isBusy = false;
-                            this.errors = [ 'A fatal error has occurred.  We have no fucking clue what the fuck just happened.' ];
-                            this.hasErrors = true;
-                        });
-                    }
-                    else
-                    {
-                        this.errors = response.data.errors;
-                        this.hasErrors = true;
-                        this.isBusy = false;
-                    }
-                })
-                .catch((error) => {
-                    this.isBusy = false;
-                    this.hasErrors = true;
-                    this.errors = [ 'An unexpected error has occurred.' ];
-                });
-        }
-    }
-}
+      this.$http.post(API_URL, this.form)
+        .then((response) => {
+          if (response.data.success) {
+            // Now we need to log the user in.
+            this.$http.post(API_LOGIN_URL, {
+              email: this.form.email,
+              password: this.form.password,
+            }).then((loginResponse) => {
+              if (loginResponse.data.success) {
+                this.$store.dispatch('login', { token: loginResponse.data.token })
+                  .then(() => {
+                    this.$router.replace('/');
+                  });
+              } else {
+                this.isBusy = false;
+                this.errors = ['A fatal error has occurred.  We have no fucking clue what the fuck just happened.'];
+                this.hasErrors = true;
+              }
+            })
+              .catch((loginError) => {
+                this.isBusy = false;
+                this.errors = ['A fatal error has occurred.  We have no fucking clue what the fuck just happened.'];
+                this.hasErrors = true;
+              });
+          } else {
+            this.errors = response.data.errors;
+            this.hasErrors = true;
+            this.isBusy = false;
+          }
+        })
+        .catch((error) => {
+          this.isBusy = false;
+          this.hasErrors = true;
+          this.errors = ['An unexpected error has occurred.'];
+        });
+    },
+  },
+};
 </script>

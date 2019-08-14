@@ -6,6 +6,6 @@
 
 <script>
 export default {
-    name: 'design-doc'
+  name: 'design-doc',
 };
 </script>

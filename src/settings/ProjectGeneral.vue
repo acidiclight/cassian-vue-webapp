@@ -22,7 +22,7 @@
                 description="The name of the project as well as its URL. Only the owner is allowed to change this.">
                 <b-form-input id="projName" type="text" required v-model="basics.name" :readonly="!isOwner"></b-form-input>
             </b-form-group>
-            <b-form-group 
+            <b-form-group
                 name="descGroup"
                 for="projAbout"
                 label="Description:"
@@ -44,59 +44,55 @@
 import { mapGetters } from 'vuex';
 
 export default {
-    name: 'project-settings-main',
-    data: () => ({
-        basics: {
-            name: '',
-            description: '',
-        },
-        successMessage: null,
-        hasErrors: false,
-        errors: [],
-    }),
-    computed: mapGetters(['user', 'isAuthenticated', 'isAdmin', 'isOwner', 'project']),
-    mounted() {
-        this.resetBasics();
+  name: 'project-settings-main',
+  data: () => ({
+    basics: {
+      name: '',
+      description: '',
     },
-    methods: {
-        submitBasics(evt) {
-            evt.preventDefault();
+    successMessage: null,
+    hasErrors: false,
+    errors: [],
+  }),
+  computed: mapGetters(['user', 'isAuthenticated', 'isAdmin', 'isOwner', 'project']),
+  mounted() {
+    this.resetBasics();
+  },
+  methods: {
+    submitBasics(evt) {
+      evt.preventDefault();
 
-            this.hasErrors = false;
-            this.errors = [];
-            this.successMessage = null;
+      this.hasErrors = false;
+      this.errors = [];
+      this.successMessage = null;
 
-            const API_URL = 'http://localhost:3000/projects/' + this.$route.params.username + '/' + this.$route.params.project + '/edit';
-            this.$http.post(API_URL, { name: this.basics.name, description: this.basics.description })
-                .then((response) => {
-                    if(response.data.success)
-                    {
-                        if(response.data.project.slug != this.$route.params.project)
-                        {
-                            this.$route.replace('/p/' + this.$route.params.username + '/' + response.data.project.slug + '/settings');
-                        }
-                        else {
-                            this.$store.dispatch('updateProject', response.data.project).then(() => {
-                                this.successMessage = 'Changed project description.';
-                            });
-                        }
-                    }
-                    else {
-                        this.hasErrors = true;
-                        this.errors = response.data.errors;
-                    }
-                })
-                .catch((error) => {
-                    this.hasErrors = true;
-                    this.errors = [ 'An unspecified error has occurred.' ];
-                });
-        },
-        resetBasics(evt) {
-            if(evt) evt.preventDefault();
+      const API_URL = `http://localhost:3000/projects/${this.$route.params.username}/${this.$route.params.project}/edit`;
+      this.$http.post(API_URL, { name: this.basics.name, description: this.basics.description })
+        .then((response) => {
+          if (response.data.success) {
+            if (response.data.project.slug != this.$route.params.project) {
+              this.$route.replace(`/p/${this.$route.params.username}/${response.data.project.slug}/settings`);
+            } else {
+              this.$store.dispatch('updateProject', response.data.project).then(() => {
+                this.successMessage = 'Changed project description.';
+              });
+            }
+          } else {
+            this.hasErrors = true;
+            this.errors = response.data.errors;
+          }
+        })
+        .catch((error) => {
+          this.hasErrors = true;
+          this.errors = ['An unspecified error has occurred.'];
+        });
+    },
+    resetBasics(evt) {
+      if (evt) evt.preventDefault();
 
-            this.basics.name = this.project.name;
-            this.basics.description = this.project.about;
-        }
-    }
-}
+      this.basics.name = this.project.name;
+      this.basics.description = this.project.about;
+    },
+  },
+};
 </script>

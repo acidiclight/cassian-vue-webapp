@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-container>
-            
+
             <b-alert variant="danger" show v-if="$route.query.redirect">
                 You must be logged in to access this page.
             </b-alert>
@@ -41,48 +41,46 @@
 </template>
 
 <script>
-const API_URL = "http://localhost:3000/auth/login";
+const API_URL = 'http://localhost:3000/auth/login';
 
 export default {
-    name: 'login',
-    data: () => ({
-        form: {
-            email: '',
-            password: ''
-        },
-        hasErrors: false,
-        errors: [],
-        isLoggingIn: false
-    }),
-    methods: {
-        onSubmit(evt) {
-            evt.preventDefault();
+  name: 'login',
+  data: () => ({
+    form: {
+      email: '',
+      password: '',
+    },
+    hasErrors: false,
+    errors: [],
+    isLoggingIn: false,
+  }),
+  methods: {
+    onSubmit(evt) {
+      evt.preventDefault();
 
-            this.hasErrors = false;
-            this.errors = [];
-            this.isLoggingIn = true;
+      this.hasErrors = false;
+      this.errors = [];
+      this.isLoggingIn = true;
 
-            this.$http.post(API_URL, this.form)
-                .then((response) => {
-                    this.isLoggingIn = false;
-                    if(response.data.success)
-                    {
-                        this.$store.dispatch('login', { token: response.data.token })
-                            .then(() => {
-                                this.$router.replace(this.$route.query.redirect || '/');
-                            });
-                    }
-                    else {
-                        this.errors = response.data.errors;
-                        this.hasErrors = true;
-                    }
-                })
-                .catch((error) => {
-                    this.isLoggingIn = false;
-                    this.errors = [ 'The username or password is invalid.' ];
-                    this.hasErrors = true;
-                });
-        }
-    }
-}
+      this.$http.post(API_URL, this.form)
+        .then((response) => {
+          this.isLoggingIn = false;
+          if (response.data.success) {
+            this.$store.dispatch('login', { token: response.data.token })
+              .then(() => {
+                this.$router.replace(this.$route.query.redirect || '/');
+              });
+          } else {
+            this.errors = response.data.errors;
+            this.hasErrors = true;
+          }
+        })
+        .catch((error) => {
+          this.isLoggingIn = false;
+          this.errors = ['The username or password is invalid.'];
+          this.hasErrors = true;
+        });
+    },
+  },
+};
 </script>

@@ -3,7 +3,7 @@
         <b-container>
             <b-jumbotron lead="I think I lost it in that stack of papers down there..." header="Page not found...">
                 <b-img src="https://cdn.discordapp.com/attachments/351163208918237195/610949243498266624/paper-clutter.png" fluid alt="Look at this wonderfully organized stack of papers.  Isn't it great?"></b-img>
-                
+
                 <p>But, I know how to get us back home.</p>
                 <b-button to="/">Take me home.</b-button>
             </b-jumbotron>
@@ -16,6 +16,6 @@
 
 <script>
 export default {
-    name: 'teapot'
-}
+  name: 'teapot',
+};
 </script>
