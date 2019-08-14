@@ -15,8 +15,22 @@ API.prototype.post = function (url, payload) {
   return this.$http.post(this.$base + url, payload);
 };
 
+API.prototype.getUserById = function(id, cb) {
+    this.get(`/users/id/${id}`)
+    .then((response) => {
+      if (response.data.success) {
+        cb(null, response.data.user);
+      } else {
+        cb(null, false);
+      }
+    })
+    .catch((error) => {
+      cb(error, false);
+    });
+}
+
 API.prototype.getUser = function (username, cb) {
-  this.get(`/users/${username}`)
+  this.get(`/users/username/${username}`)
     .then((response) => {
       if (response.data.success) {
         cb(null, response.data.user);
