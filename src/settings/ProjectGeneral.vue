@@ -66,26 +66,29 @@ export default {
       this.errors = [];
       this.successMessage = null;
 
-      const API_URL = `http://localhost:3000/projects/${this.$route.params.username}/${this.$route.params.project}/edit`;
-      this.$http.post(API_URL, { name: this.basics.name, description: this.basics.description })
-        .then((response) => {
-          if (response.data.success) {
-            if (response.data.project.slug != this.$route.params.project) {
-              this.$route.replace(`/p/${this.$route.params.username}/${response.data.project.slug}/settings`);
+      this.$api.editProjectInfo(
+        this.$route.params.username,
+        this.$route.params.project,
+        this.basics.name,
+        this.basics.description,
+        (err, p) => {
+          if (p) {
+            if (p.name != this.project.name) {
+              this.$store.dispatch('updateProject', p).then(() => {
+                this.$router.replace(`/p/${this.$route.params.username}/${p.slug}/settings`);
+                this.successMessage = 'Project name changed successfully.';
+              });
             } else {
-              this.$store.dispatch('updateProject', response.data.project).then(() => {
-                this.successMessage = 'Changed project description.';
+              this.$store.dispatch('updateProject', p).then(() => {
+                this.successMessage = 'Project description has been updated.';
               });
             }
           } else {
             this.hasErrors = true;
-            this.errors = response.data.errors;
+            this.errors = err;
           }
-        })
-        .catch((error) => {
-          this.hasErrors = true;
-          this.errors = ['An unspecified error has occurred.'];
-        });
+        },
+      );
     },
     resetBasics(evt) {
       if (evt) evt.preventDefault();

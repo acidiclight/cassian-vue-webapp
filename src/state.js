@@ -35,8 +35,6 @@ const mutations = {
   forgetProject(s) { s.project = null; },
 };
 
-const API_GETUSER = 'http://localhost:3000/auth/userinfo';
-
 const actions = {
   login(context, payload) {
     context.commit('setToken', payload);
@@ -45,13 +43,13 @@ const actions = {
     context.commit('logout');
   },
   validateUser(context) {
-    Vue.prototype.$http.get(API_GETUSER)
-      .then((response) => {
-        context.commit('setUser', response.data);
-      })
-      .catch((error) => {
+    Vue.prototype.$api.getCurrentUser((err, user) => {
+      if (user) {
+        context.commit('setUser', user);
+      } else {
         context.commit('logout');
-      });
+      }
+    });
   },
   requireAuth(context, payload) {
     const { to, from, next } = payload;
@@ -65,19 +63,13 @@ const actions = {
   fetchProject(context, payload) {
     const { user, project } = payload;
 
-    const API_PROJECT_URL = `http://localhost:3000/projects/${user}/${project}`;
-
-    Vue.prototype.$http.get(API_PROJECT_URL)
-      .then((response) => {
-        if (response.data.success) {
-          context.commit('setProject', response.data.project);
-        } else {
-          context.commit('forgetProject');
-        }
-      })
-      .catch((error) => {
+    Vue.prototype.$api.getProject(user, project, (err, p) => {
+      if (p) {
+        context.commit('setProject', p);
+      } else {
         context.commit('forgetProject');
-      });
+      }
+    });
   },
   forgetProject(context) {
     context.commit('forgetProject');

@@ -75,26 +75,24 @@ export default {
       this.hasErrors = false;
       this.errors = [];
 
-      const API_URL = `http://localhost:3000/projects/${this.$route.params.username}/${this.$route.params.project}/edit`;
-
-      this.$http.post(API_URL, { name: this.project.name, description: this.edit.description })
-        .then((response) => {
-          if (response.data.success) {
-            this.$store.dispatch('updateProject', response.data.project).then(() => {
+      this.$api.editProjectInfo(
+        this.$route.params.username,
+        this.$route.params.project,
+        this.project.name,
+        this.edit.description,
+        (err, p) => {
+          if (p) {
+            this.$store.dispatch('updateProject', p).then(() => {
               this.isBusy = false;
               this.$bvModal.hide('editDescription');
             });
           } else {
-            this.errors = response.data.errors;
-            this.hasErrors = true;
             this.isBusy = false;
+            this.hasErrors = true;
+            this.errors = err;
           }
-        })
-        .catch((error) => {
-          this.hasErrors = true;
-          this.errors = ['An unknown error has occurred.'];
-          this.isBusy = false;
-        });
+        },
+      );
     },
     showEditModal() {
       if (this.isBusy) return;

@@ -3,6 +3,8 @@ import BootstrapVue from 'bootstrap-vue';
 import Vuex from 'vuex';
 import VueRouter from 'vue-router';
 import VueSimplemde from 'vue-simplemde';
+import API from './api';
+
 import App from './App.vue';
 import Home from './Home.vue';
 import CreateProject from './CreateProject';
@@ -28,6 +30,8 @@ import ProjectSettingsTasks from './settings/ProjectTasks.vue';
 import ProjectSettingsTeam from './settings/ProjectTeam.vue';
 import ProjectSettingsDesignDoc from './settings/ProjectGDD.vue';
 
+// User pages
+import UserPage from './UserPage.vue';
 
 import Axios from 'axios';
 
@@ -65,26 +69,22 @@ const requireDev = (to, from, next) => {
 };
 
 const fetchProject = (to, from, next) => {
-  const API_URL = `http://localhost:3000/projects/${to.params.username}/${to.params.project}`;
-  Vue.prototype.$http.get(API_URL)
-    .then((response) => {
-      if (response.data.success) {
-        state.dispatch('updateProject', response.data.project).then(() => {
-          next();
-        });
-      } else {
-        next('/404');
-      }
-    })
-    .catch((error) => {
+  Vue.prototype.$api.getProject(to.params.username, to.params.project, (err, project) => {
+    if (project) {
+      state.dispatch('updateProject', project).then(() => {
+        next();
+      });
+    } else {
       next('/404');
-    });
+    }
+  });
 };
 
 const routes = [
   { path: '/', component: Home },
   { path: '/projects/create', component: CreateProject, beforeEnter: requireAuth },
   { path: '/login', component: Login },
+  { path: '/u/:username', component: UserPage },
   { path: '/create-account', component: CreateAccount },
   {
     path: '/p/:username/:project',
@@ -136,6 +136,8 @@ Vue.prototype.$http.interceptors.request.use((config) => {
   if (jwt) config.headers.Authorization = jwt;
   return config;
 });
+
+Vue.prototype.$api = new API(Vue.prototype.$http, 'http://localhost:3000');
 
 new Vue({
   router,

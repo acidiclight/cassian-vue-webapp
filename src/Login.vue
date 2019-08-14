@@ -62,24 +62,17 @@ export default {
       this.errors = [];
       this.isLoggingIn = true;
 
-      this.$http.post(API_URL, this.form)
-        .then((response) => {
-          this.isLoggingIn = false;
-          if (response.data.success) {
-            this.$store.dispatch('login', { token: response.data.token })
-              .then(() => {
-                this.$router.replace(this.$route.query.redirect || '/');
-              });
-          } else {
-            this.errors = response.data.errors;
-            this.hasErrors = true;
-          }
-        })
-        .catch((error) => {
-          this.isLoggingIn = false;
-          this.errors = ['The username or password is invalid.'];
+      this.$api.login(this.form.email, this.form.password, function(err, token) {
+        this.isLoggingIn = false;
+        if(token) {
+          this.$store.dispatch('login', { token }).then(() => {
+            this.$router.replace(this.$route.query.redirect || '/');
+          });
+        } else {
+          this.errors = [ 'The email or password you entered was incorrect.' ];
           this.hasErrors = true;
-        });
+        }
+      });
     },
   },
 };
