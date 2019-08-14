@@ -18,14 +18,12 @@
                 </b-card>
             </b-col>
             <b-col md="3">
-                <b-card bg-variant="secondary" text-variant="white"
+                <b-card bg-variant="dark" text-variant="white"
                     title="Basic info">
                     <b-card-text>
                         <h6>Tags</h6>
                         <div v-if="project.tags.length">
-                            <div v-for="tag in project.tags" v-bind:key="tag">
-                                <b-badge variant="primary">{{ tag }}</b-badge>
-                            </div>
+                            <b-badge v-for="tag in project.tags" :key="tag" variant="primary">{{ tag }}</b-badge>
                         </div>
                         <div v-else>
                             <em>This project has no tags.</em>
