@@ -12,9 +12,7 @@
             <b-card-footer>
                 <strong>Tags: </strong>
                 <div v-if="project.tags.length">
-                    <div v-for="tag in project.tags" :key="tag">
-                        <b-badge variant="primary">{{ tag }}</b-badge>
-                    </div>
+                    <b-badge v-for="tag in project.tags" :key="tag" variant="primary">{{ tag }}</b-badge>
                 </div>
                 <em v-else>None</em>
             </b-card-footer>
