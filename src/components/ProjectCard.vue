@@ -2,10 +2,12 @@
     <div>
         <b-card no-body bg-variant="dark" text-variant="white">
             <b-card-body>
-                <b-link class="stretched-link" :to="projectLink">
-                    <b-card-title>{{ project.name }}</b-card-title>
-                    <b-card-sub-title>A project by <em>{{ ownerName }}</em></b-card-sub-title>
-                </b-link>
+                <b-link class="stretched-link" :to="projectLink"></b-link>
+                <b-card-title>{{ project.name }}</b-card-title>
+                <b-card-sub-title>A project by <em>{{ ownerName }}</em></b-card-sub-title>
+                <b-card-text>
+                    {{ projectSummary }}
+                </b-card-text>
             </b-card-body>
             <b-card-footer>
                 <strong>Tags: </strong>
@@ -33,6 +35,9 @@ export default {
         },
         projectLink() {
             return `/p/${this.project.owner.username}/${this.project.slug}`;
+        },
+        projectSummary() {
+            return this.project.summary || 'This project has no summary.';
         }
     }
 }
