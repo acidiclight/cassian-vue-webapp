@@ -1,13 +1,17 @@
+import { POINT_CONVERSION_COMPRESSED } from "constants";
+
 const API = function (http, baseUrl) {
   this.$http = http;
   this.$base = baseUrl;
 };
 
 API.prototype.get = function (url) {
+    console.log('GET: ' + url);
   return this.$http.get(this.$base + url);
 };
 
 API.prototype.post = function (url, payload) {
+    console.log('POST: ' + url);
   return this.$http.post(this.$base + url, payload);
 };
 
@@ -39,11 +43,11 @@ API.prototype.getProject = function (username, project, cb) {
     });
 };
 
-API.prototype.getAllProjects = function (cb) {
-  this.get('/projects')
+API.prototype.getAllProjects = function (start, max, cb) {
+  this.get(`/projects?start=${start}&max=${max}`)
     .then((response) => {
       if (response.data.success) {
-        cb(null, response.projects);
+        cb(null, response.data.projects);
       } else {
         cb(null, false);
       }

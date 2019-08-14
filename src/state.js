@@ -108,7 +108,7 @@ function isOwner(s) {
   if (!s.user) return false;
   if (!s.project) return false;
 
-  return s.project.owner == s.user._id;
+  return s.project.owner['_id'] == s.user._id;
 }
 
 function isAdmin(s) {

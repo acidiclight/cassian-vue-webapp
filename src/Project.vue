@@ -1,9 +1,9 @@
 <template>
     <div>
         <b-container fluid v-if="project">
-            <b-nav>
+            <b-nav tabs>
                 <b-nav-text>{{project.name}}</b-nav-text>
-                <b-nav-item :to="projectUrl('/')">About</b-nav-item>
+                <b-nav-item :to="projectUrl('/')" active-class="">About</b-nav-item>
                 <b-nav-item :to="projectUrl('/tasks')">Taskst</b-nav-item>
                 <b-nav-item :to="projectUrl('/gdd')">GDD</b-nav-item>
                 <b-nav-item :to="projectUrl('/team')">Team</b-nav-item>

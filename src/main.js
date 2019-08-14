@@ -33,6 +33,9 @@ import ProjectSettingsDesignDoc from './settings/ProjectGDD.vue';
 // User pages
 import UserPage from './UserPage.vue';
 
+// project list
+import ProjectList from './ProjectList.vue';
+
 import Axios from 'axios';
 
 Vue.prototype.$http = Axios;
@@ -82,6 +85,7 @@ const fetchProject = (to, from, next) => {
 
 const routes = [
   { path: '/', component: Home },
+  { path: '/projects', component: ProjectList },
   { path: '/projects/create', component: CreateProject, beforeEnter: requireAuth },
   { path: '/login', component: Login },
   { path: '/u/:username', component: UserPage },
@@ -128,6 +132,8 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   routes,
+  linkActiveClass: 'active',
+  linkExactActiveClass: 'active',
 });
 
 Vue.prototype.$http.interceptors.request.use((config) => {
