@@ -78,8 +78,12 @@ export default {
       this.$api.editProjectInfo(
         this.$route.params.username,
         this.$route.params.project,
-        this.project.name,
-        this.edit.description,
+        {
+          name: this.project.name,
+          description: this.edit.description,
+          summary: this.project.summary,
+          tags: this.project.tags
+        },
         (err, p) => {
           if (p) {
             this.$store.dispatch('updateProject', p).then(() => {

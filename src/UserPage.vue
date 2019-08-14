@@ -1,4 +1,23 @@
-<template>
+
+</templa
+</template>
+Getters user-page',
+    profle: null,
+  i  projets: [
+  data: () => ({
+} from 'vuex';
+
+exp  }),
+}
+</script;>cts: [],
+  }),
+};
+</script>ct: [], )
+};/script>
+>
+
+
+<,}
 
 </template>
 
@@ -13,3 +32,5 @@ export default {
   }),
 };
 </script>
+ort default {
+  name: '

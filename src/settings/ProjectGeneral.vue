@@ -23,6 +23,22 @@
                 <b-form-input id="projName" type="text" required v-model="basics.name" :readonly="!isOwner"></b-form-input>
             </b-form-group>
             <b-form-group
+              name="summaryGroup"
+              for="summary"
+              label="Summary:"
+              description="A short description of the project displayed on its Project Card.">
+              <b-form-input :readonly="!isOwner" v-model="basics.summary" id="summary" placeholder="A cool thing that does cool things."></b-form-input>
+            </b-form-group>
+
+            <b-form-group
+              name="tagsGroup"
+              for="tags"
+              label="Tags:"
+              description="Keywords that define the project.">
+              <tag-editor :readonly="!isOwner" v-model="basics.tags" id="tags"></tag-editor>
+            </b-form-group>
+
+            <b-form-group
                 name="descGroup"
                 for="projAbout"
                 label="Description:"
@@ -42,13 +58,19 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import TagEditor from '../components/TagEditor';
 
 export default {
   name: 'project-settings-main',
+  components: {
+    'tag-editor': TagEditor
+  },
   data: () => ({
     basics: {
       name: '',
       description: '',
+      summary: '',
+      tags: ['one', 'two', 'three']
     },
     successMessage: null,
     hasErrors: false,
@@ -69,8 +91,7 @@ export default {
       this.$api.editProjectInfo(
         this.$route.params.username,
         this.$route.params.project,
-        this.basics.name,
-        this.basics.description,
+        this.basics,
         (err, p) => {
           if (p) {
             if (p.name != this.project.name) {
@@ -80,7 +101,7 @@ export default {
               });
             } else {
               this.$store.dispatch('updateProject', p).then(() => {
-                this.successMessage = 'Project description has been updated.';
+                this.successMessage = 'Project info has been updated.';
               });
             }
           } else {

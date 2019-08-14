@@ -99,8 +99,8 @@ API.prototype.login = function (email, password, cb) {
     });
 };
 
-API.prototype.editProjectInfo = function (username, project, newName, newDescription, cb) {
-  this.post(`/projects/${username}/${project}/edit`, { name: newName, description: newDescription })
+API.prototype.editProjectInfo = function (username, project, form, cb) {
+  this.post(`/projects/${username}/${project}/edit`, form)
     .then((response) => {
       if (response.data.success) {
         cb(null, response.data.project);
