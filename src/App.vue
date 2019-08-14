@@ -1,0 +1,68 @@
+<template>
+  <div id="app">
+    <b-navbar toggleable="lg" type="dark" variant="dark" sticky>
+      <b-navbar-brand to="/">Project: Cassian</b-navbar-brand>
+
+      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+      <b-collapse id="nav-collapse" is-nav>
+        <b-navbar-nav class="ml-auto" v-if="isAuthenticated">
+          <b-nav-item-dropdown :text="userDisplayName" right>
+              <b-dropdown-item to="/profile">Profile</b-dropdown-item>
+              <b-dropdown-divider></b-dropdown-divider>
+
+              <!-- 'Create' group -->
+              <b-dropdown-group id="create" header="Create">
+                <b-dropdown-item to="/projects/create">New project</b-dropdown-item>
+              </b-dropdown-group>
+
+              <b-dropdown-divider></b-dropdown-divider>
+
+              <b-dropdown-group id="account" header="Account">
+                <b-dropdown-item to="/logout">Log out</b-dropdown-item>
+              </b-dropdown-group>
+          </b-nav-item-dropdown>
+        </b-navbar-nav>
+        <b-navbar-nav class="ml-auto" v-else>
+          <b-nav-item to="/login">Log in</b-nav-item>
+          <b-nav-item to="/create-account">Create account</b-nav-item>
+        </b-navbar-nav>
+
+      </b-collapse>
+    </b-navbar>
+    <b-container fluid v-if="$route.query.err">
+        <b-alert variant="danger" show>{{ getError() }}</b-alert>
+    </b-container>
+    <router-view></router-view>
+  </div>
+</template>
+
+<script>
+  import { mapGetters } from 'vuex';
+
+const API_URL_GETUSER = "http://localhost:3000/auth/userinfo";
+
+export default {
+  name: 'app',
+  computed: mapGetters(['isAuthenticated', 'user', 'userDisplayName']),
+  mounted() {
+    this.$store.dispatch('validateUser');
+  },
+  methods: {
+    getError() {
+      switch(this.$route.query.err)
+      {
+        case 'notAdmin':
+            return 'You are not an administrator of that project.';
+            break;
+          case 'notOwner':
+            return 'You do not own that project.';
+            break;
+          case 'notDev':
+            return 'You are not a developer of that project.'
+            break;
+      }
+    }
+  }
+};
+</script>
