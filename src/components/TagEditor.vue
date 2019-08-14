@@ -1,7 +1,5 @@
 <template>
     <div>
-        <p>readonly: {{ readonly }}</p>
-
         <h4>
             <b-input-group size="sm">
                 <b-badge class="tag-editor-badge" variant="primary" v-for="tag in value" :key="tag">{{ tag }}</b-badge>

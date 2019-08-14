@@ -70,7 +70,7 @@ export default {
       name: '',
       description: '',
       summary: '',
-      tags: ['one', 'two', 'three']
+      tags: []
     },
     successMessage: null,
     hasErrors: false,
@@ -116,6 +116,8 @@ export default {
 
       this.basics.name = this.project.name;
       this.basics.description = this.project.about;
+      this.basics.tags = this.project.tags;
+      this.basics.summary = this.project.summary;
     },
   },
 };
