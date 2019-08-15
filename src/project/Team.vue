@@ -1,20 +1,23 @@
 <template>
-    <div>
-        <h1>Team</h1>
-        <p>This project has the following team members:</p>
-
-        <ul v-for="member of members" :key="member._id">
-            <li><router-link :to="memberLink(member)">{{ member.username }}</router-link></li>
-        </ul>
-    </div>
+    <b-card title="Team">
+        <b-list-group>
+            <b-list-group-item v-for="member in members" :key="member._id" :to="memberLink(member)">
+                <user-avatar :user="member"></user-avatar>
+            </b-list-group-item>
+        </b-list-group>
+    </b-card>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import UserAvatar from '../components/UserAvatar';
 
 export default {
     name: 'team',
     computed: mapGetters(['user', 'isAuthenticated', 'project', 'isDev', 'isAdmin', 'isOwner']),
+    components: {
+        'user-avatar': UserAvatar
+    },
     data: () => ({
         members: [],
         uids: [],

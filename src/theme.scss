@@ -87,6 +87,14 @@ $alert-color-level: -10;
 $code-color: $primary;
 $pre-color: $faint;
 
+/* List group */
+$list-group-color: $faint;
+$list-group-bg: transparent;
+$list-group-hover-bg: $fire;
+$list-group-active-bg: $primary;
+$list-group-action-hover-color: $white;
+$list-group-action-active-bg: $primary;
+
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/bootstrap-vue/src/index.scss';
 
