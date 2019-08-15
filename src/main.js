@@ -100,10 +100,8 @@ const routes = [
   { 
     path: '/projects',
     component: ProjectList,
-    children: [
-      { path: 'create', component: CreateProject, beforeEnter: requireAuth },
-    ]
   },
+  { path: '/projects/create', component: CreateProject, beforeEnter: requireAuth },
   { path: '/login', component: Login },
   { path: '/u/:username', component: UserPage, beforeEnter: fetchUser },
   { path: '/create-account', component: CreateAccount },

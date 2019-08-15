@@ -4,7 +4,7 @@
             <b-nav tabs>
                 <b-nav-text>{{project.name}}</b-nav-text>
                 <b-nav-item :to="projectUrl('/')" active-class="">About</b-nav-item>
-                <b-nav-item :to="projectUrl('/tasks')">Taskst</b-nav-item>
+                <b-nav-item :to="projectUrl('/tasks')">Tasks</b-nav-item>
                 <b-nav-item :to="projectUrl('/gdd')">GDD</b-nav-item>
                 <b-nav-item :to="projectUrl('/team')">Team</b-nav-item>
                 <b-nav-item :to="projectUrl('/settings')" v-if="isAdmin">Settings</b-nav-item>
