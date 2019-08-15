@@ -109,7 +109,7 @@ API.prototype.login = function (email, password, cb) {
       }
     })
     .catch((error) => {
-      cb(err, false);
+      cb(error, false);
     });
 };
 
