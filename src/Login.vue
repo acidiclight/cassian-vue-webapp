@@ -64,10 +64,6 @@ export default {
 
       this.$api.login(this.form.email, this.form.password, (err, token) => {
         this.isLoggingIn = false;
-        if(err) {
-          alert(JSON.stringify(err));
-        }
-
         if(token) {
           this.$store.dispatch('login', { token }).then(() => {
             this.$router.replace(this.$route.query.redirect || '/');
