@@ -3,7 +3,18 @@ import { POINT_CONVERSION_COMPRESSED } from "constants";
 const API = function (http, baseUrl) {
   this.$http = http;
   this.$base = baseUrl;
+
+  this.interceptHttpRequests();
 };
+
+API.prototype.interceptHttpRequests = function() {
+  this.$http.interceptors.request.use((config) => {
+    // get the JWT.
+    const jwt = localStorage.getItem('user-token');
+    if (jwt) config.headers.Authorization = jwt;
+    return config;
+  });  
+}
 
 API.prototype.get = function (url) {
     console.log('GET: ' + url);

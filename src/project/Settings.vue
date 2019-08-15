@@ -1,24 +1,19 @@
 <template>
-    <div>
-        <b-row>
-            <b-col sm="3">
-                <b-nav pills vertical>
-                    <b-nav-text>Project settings</b-nav-text>
-                    <b-nav-item :to="settingsUrl('')">General</b-nav-item>
-                    <b-nav-item :to="settingsUrl('/gdd')">Design Document</b-nav-item>
-                    <b-nav-item :to="settingsUrl('/team')">Team</b-nav-item>
-                    <b-nav-item :to="settingsUrl('/tasks')">Tasks</b-nav-item>
-                    <div v-if="isOwner">
-                        <b-nav-text>Danger Zone</b-nav-text>
-                        <b-nav-item variant="danger" @click="deleteProject">Delete project</b-nav-item>
-                    </div>
-                </b-nav>
-            </b-col>
-            <b-col>
+    <b-card no-body>
+        <b-card-body>
+            <b-card-title>Project settings</b-card-title>
+
+            <b-nav tabs>
+                <b-nav-item :to="settingsUrl('')">General</b-nav-item>
+                <b-nav-item :to="settingsUrl('/gdd')">Design Document</b-nav-item>
+                <b-nav-item :to="settingsUrl('/team')">Team</b-nav-item>
+                <b-nav-item :to="settingsUrl('/tasks')">Tasks</b-nav-item>
+            </b-nav>
+            <div class="bg-dark settings-inner">
                 <router-view></router-view>
-            </b-col>
-        </b-row>
-    </div>
+            </div>
+        </b-card-body>
+    </b-card>
 </template>
 
 <script>
@@ -37,3 +32,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.settings-inner {
+    padding: 20px;
+}
+</style>

@@ -151,13 +151,6 @@ const router = new VueRouter({
   linkExactActiveClass: 'active',
 });
 
-Vue.prototype.$http.interceptors.request.use((config) => {
-  // get the JWT.
-  const jwt = localStorage.getItem('user-token');
-  if (jwt) config.headers.Authorization = jwt;
-  return config;
-});
-
 Vue.prototype.$api = new API(Vue.prototype.$http, 'http://localhost:3000');
 
 new Vue({
