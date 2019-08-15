@@ -7,6 +7,20 @@ const API = function (http, baseUrl) {
   this.interceptHttpRequests();
 };
 
+API.prototype.editProfile = function(info, cb) {
+  this.post('/auth/userinfo', info)
+    .then((response) => {
+      if(response.data.success) {
+        cb(null, response.data.user);
+      } else {
+        cb(null, false);
+      }
+    })
+    .catch((error) => {
+      cb(error, false);
+    })
+}
+
 API.prototype.interceptHttpRequests = function() {
   this.$http.interceptors.request.use((config) => {
     // get the JWT.
