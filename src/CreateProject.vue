@@ -48,24 +48,16 @@ export default {
       this.hasErrors = false;
       this.isBusy = true;
 
-      const API_URL = 'http://localhost:3000/projects';
-
-      this.$http.post(API_URL, this.form)
-        .then((result) => {
-          if (result.data.success) {
-            this.isBusy = false;
-            this.$router.replace(`/p/${this.$store.state.user.username}/${result.data.project.slug}`);
-          } else {
-            this.errors = this.data.errors;
-            this.hasErrors = true;
-            this.isBusy = false;
-          }
-        })
-        .catch((error) => {
-          this.errors = ['An unexpected error has occurred while creating the project.'];
-          this.hasErrors = true;
+      this.$api.createProject(this.form, (err, project) => {
+        if(project) {
           this.isBusy = false;
-        });
+          this.$router.replace(`/p/${project.owner.username}/${project.slug}`);
+        } else {
+          this.isBusy = false;
+          this.hasErrors = true;
+          this.errors = err;
+        }
+      });
     },
   },
 };

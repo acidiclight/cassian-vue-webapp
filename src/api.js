@@ -7,6 +7,16 @@ const API = function (http, baseUrl) {
   this.interceptHttpRequests();
 };
 
+API.prototype.createProject = function(project, cb) {
+  this.post('/projects', project)
+    .then((response) => {
+      cb(response.data.errors, response.data.project);
+    })
+    .catch((error) => {
+      cb([ error.message ], false);
+    });
+}
+
 API.prototype.getElements = function(project, cb) {
   this.get('/elements/' + project._id)
     .then((response) => {
