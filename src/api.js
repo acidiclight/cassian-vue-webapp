@@ -7,6 +7,54 @@ const API = function (http, baseUrl) {
   this.interceptHttpRequests();
 };
 
+API.prototype.getElements = function(project, cb) {
+  this.get('/elements/' + project._id)
+    .then((response) => {
+      if(response.data.success) {
+        cb(null, response.data.elements);
+      } else {
+        cb(null, false);
+      }
+    })
+    .catch((error) => {
+      cb(error, false);
+    });
+}
+
+API.prototype.createElementType = function(project, elementType, cb) {
+  this.post(`/elements/types/${project._id}`, elementType)
+    .then((response) => {
+      cb(response.data.errors, response.data.type);
+    })
+    .catch((error) => {
+      cb([ 'Either the project was not found, you do not have permission to create element types for the project, or an error has occurred saving the element type.' ], false);
+    });
+}
+
+API.prototype.getElementTypes = function(project, cb) {
+  this.get('/elements/types/' + project._id)
+    .then((response) => {
+      if(response.data.success) {
+        cb(null, response.data.types);
+      } else {
+        cb(null, false);
+      }
+    })
+    .catch((error) => {
+      cb(error, false);
+    })
+}
+
+API.prototype.deleteElementType = function(elementType, cb) {
+  this.post(`/elements/type/${elementType._id}/delete`)
+    .then((response) => {
+      cb(response.data.errors, response.data.success);
+    })
+    .catch((error) => {
+      cb([ error.message ], false);
+    });
+}
+
 API.prototype.editProfile = function(info, cb) {
   this.post('/auth/userinfo', info)
     .then((response) => {

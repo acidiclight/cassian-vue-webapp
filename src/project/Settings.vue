@@ -4,7 +4,7 @@
             <b-card-title>Project settings</b-card-title>
 
             <b-nav tabs>
-                <b-nav-item :to="settingsUrl('')">General</b-nav-item>
+                <b-nav-item :to="settingsUrl('')" active-class="">General</b-nav-item>
                 <b-nav-item :to="settingsUrl('/gdd')">Design Document</b-nav-item>
                 <b-nav-item :to="settingsUrl('/team')">Team</b-nav-item>
                 <b-nav-item :to="settingsUrl('/tasks')">Tasks</b-nav-item>
@@ -24,7 +24,7 @@ export default {
   computed: mapGetters(['project', 'user', 'isAuthenticated', 'isOwner', 'isAdmin', 'isDev']),
   methods: {
     settingsUrl(url) {
-      return `/p/${this.$route.params.username}/${this.$route.params.project}/settings/${url}`;
+      return `/p/${this.$route.params.username}/${this.$route.params.project}/settings${url}`;
     },
     deleteProject() {
 
