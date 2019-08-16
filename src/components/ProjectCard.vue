@@ -1,23 +1,16 @@
 <template>
-    <div>
-        <b-card no-body bg-variant="dark" text-variant="white">
-            <b-card-body>
-                <b-link class="stretched-link" :to="projectLink"></b-link>
-                <b-card-title>{{ project.name }}</b-card-title>
-                <b-card-sub-title>A project by <em>{{ ownerName }}</em></b-card-sub-title>
-                <b-card-text>
-                    {{ projectSummary }}
-                </b-card-text>
-            </b-card-body>
-            <b-card-footer>
-                <strong>Tags: </strong>
-                <div v-if="project.tags.length">
-                    <b-badge v-for="tag in project.tags" :key="tag" variant="primary">{{ tag }}</b-badge>
-                </div>
-                <em v-else>None</em>
-            </b-card-footer>
-        </b-card>
-    </div>
+    <b-list-group-item :to="projectLink" class="flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1 header-alt">{{ project.name }}</h5>
+            <small>{{ project.owner.username }}/{{ project.slug }}</smalL>
+        </div>
+        <div class="mb-1 w-100">
+            {{ project.summary }}
+        </div>
+        <small>
+            <b-badge variant="primary" v-for="tag in project.tags" :key="tag">{{ tag }}</b-badge>
+        </small>
+    </b-list-group-item>
 </template>
 
 <script>

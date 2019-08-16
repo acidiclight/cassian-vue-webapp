@@ -6,9 +6,9 @@
             <hr/>
 
             <div v-if="projects.length">
-                <b-card-group deck v-for="project in projects" :key="project._id">
-                    <project-card :project="project"></project-card>
-                </b-card-group>
+                <b-list-group>
+                    <project-card v-for="project in projects" :key="project._id" :project="project"></project-card>
+                </b-list-group>
             </div>
             <div v-else>
                 <h4>No projects found!</h4>

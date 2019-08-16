@@ -45,7 +45,11 @@
                             </b-row>
                         </b-tab>
                         <b-tab title="Projects">
-
+                            <h4>Projects</h4>
+                            <p>These are all of the projects that this user owns that are either public or you have access to.</p>
+                            <b-list-group>
+                                <project-card :project="project" v-for="project in profileProjects" :key="project._id"></project-card>
+                            </b-list-group>
                         </b-tab>
                     </b-tabs>
                 </b-card-body>
@@ -74,18 +78,32 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex';
+import ProjectCard from './components/ProjectCard'
 
 export default {
     name: 'user-page',
+    components: {
+        'project-card': ProjectCard
+    },
     computed: mapGetters(['profile', 'user', 'isAuthenticated' ]),
     data: () => ({
         edit: {
             about: '',
         },
+        profileProjects: [],
         isBusy: false,
         errors: [],
         hasErrors: false
     }),
+    mounted() {
+        this.$api.getProjects(this.profile.username, (err, ps) => {
+            if(ps) {
+                for(let project of ps) {
+                    this.profileProjects.push(project);
+                }
+            } 
+        });
+    },
     methods: {
         hasLinks() {
             return this.profile.githubURL.length || this.profile.websiteURL.length;
@@ -129,6 +147,9 @@ export default {
                     this.isBusy = false;
                 }
             });
+        },
+        projectLink(project) {
+            return `/p/${project.owner.username}/${project.slug}`;
         }
     }
 }
