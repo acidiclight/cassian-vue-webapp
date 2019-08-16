@@ -54,7 +54,7 @@ export default {
         .then((result) => {
           if (result.data.success) {
             this.isBusy = false;
-            this.$router.replace(`/${this.$store.state.user.username}/${result.data.project.slug}`);
+            this.$router.replace(`/p/${this.$store.state.user.username}/${result.data.project.slug}`);
           } else {
             this.errors = this.data.errors;
             this.hasErrors = true;
