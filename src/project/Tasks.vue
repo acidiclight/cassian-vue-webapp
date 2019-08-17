@@ -1,7 +1,57 @@
 <template>
-    <b-card title="Tasks">
-        <b-button v-if="isDev" @click="openTaskModal" variant="primary" size="sm"><i class="fa fa-plus"></i> Create new</b-button>
-        <b-table striped hover :items="tasks"></b-table>
+    <div>
+        <b-collapse id="fetchErrors" :visible="fetchErrors.length > 0">
+            <b-alert variant="danger" show v-for="err in fetchErrors" :key="err"><strong><i class="fa fa-times-circle"></i> Error:</strong> {{ err }}</b-alert>
+        </b-collapse>
+
+        <b-row>
+            <b-col class="kanban">
+                <div class="kanban-inner" @mousedown.left="startDrag" @mouseup.left="endDrag" v-on:mousemove="drag" id="kanbanBoard">
+                    <b-card title="Pending">
+                        <b-list-group>
+                            <task :task="t" v-for="t in tasks" :key="t._id"></task>
+                        </b-list-group>
+                    </b-card>
+                </div>
+            </b-col>
+            <b-col lg="6" v-if="currentTask" class="offset-lg-6">
+                <br/>
+                <b-card bg-variant="dark" :title="currentTask.name">
+                    <!-- task info -->
+                    <dl>
+                        <b-row>
+                            <b-col>
+                                <dt>ID:</dt>
+                                <dd>#{{ currentTask.friendlyId }}</dd>
+                            </b-col>
+                            <b-col>
+                                <dt>Author:</dt>
+                                <dd><user-avatar :user="currentTask.author"></user-avatar></dd>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col>
+                                <dt>Status</dt>
+                                <dd>{{ currentTask.status }}</dd>
+                            </b-col>
+                            <b-col>
+                                <dt>Design element</dt>
+                                <dd v-if="currentTask.element">
+                                    <router-link :to="elementLink">{{ currentTask.element.name }}</router-link>
+                                </dd>
+                                <dd v-else>
+                                    None
+                                </dd>
+                            </b-col>
+                        </b-row>
+                    </dl>
+                </b-card>
+                <br/>
+                <b-card title="Description" bg-variant="dark">
+                    <markdown :content="currentTask.description"></markdown>
+                </b-card>
+            </b-col>
+        </b-row>
 
         <b-form v-if="isDev">
             <b-modal size="lg" title="Create task" id="createTask">
@@ -31,14 +81,20 @@
                 </template>
             </b-modal>
         </b-form>
-    </b-card>
+    </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import Task from '../components/Task';
+import UserAvatar from '../components/UserAvatar'
 
 export default {
     name: 'tasks',
+    components: {
+        'task': Task,
+        'user-avatar': UserAvatar,
+    },
     data: () => ({
         tasks: [],
         newTask: {
@@ -48,14 +104,49 @@ export default {
         },
         createAndContinue: 'false',
         isBusy: false,
+        fetchErrors: [],
         hasErrors: false,
         errors: [],
+        isDragging: false,
     }),
-    computed: mapGetters(['project', 'isAuthenticated', 'isDev', 'isOwner', 'isAdmin', 'user' ]),
+    computed: {
+        ...mapGetters(['project', 'isAuthenticated', 'isDev', 'isOwner', 'isAdmin', 'user', 'currentTask' ]),
+        elementLink() {
+            return `/p/${this.project.owner.username}/${this.project.slug}/gdd/${this.currentTask.element._id}`;
+        }
+    },
     mounted() {
         this.fetchTasks();
     },
+    watch: {
+        $route (to, from) {
+            this.$api.getTask(this.project, this.$route.params.id, (err, task) => {
+                if(task) {
+                    this.$store.dispatch('setTask', task);
+                } else {
+                    this.$store.dispatch('setTask', null);
+                }
+            });
+        },
+    },
     methods: {
+        startDrag(evt) {
+            evt.preventDefault();
+
+            this.isDragging = true;
+        },
+        endDrag(evt) {
+            evt.preventDefault();
+            
+            this.isDragging = false;
+        },
+        drag(evt) {
+            evt.preventDefault();
+
+            if(this.isDragging) {
+                document.getElementById('kanbanBoard').scrollLeft -= evt.movementX; // Essentially emulating a touch-style horizontal scroll.
+            }
+        },
         fetchTasks() {
             this.tasks = [];
             this.$api.getTasks(this.project, (err, tasks) => {
@@ -63,6 +154,8 @@ export default {
                     for(let task of tasks) {
                         this.tasks.push(task);
                     }
+                } else {
+                    this.fetchErrors = err;
                 }
             });
         },
@@ -78,8 +171,12 @@ export default {
                 this.isBusy = false;
                 if(task) {
                     this.tasks.push(task);
-                    this.task = task;
                     this.cancelCreateTask();
+                    if(this.createAndContinue == 'true') {
+                        this.openTaskModal();
+                    } else {
+                        this.$router.replace(`/p/${this.project.owner.username}/${this.project.slug}/tasks/{task.friendlyId}`);
+                    }
                 } else {
                     this.hasErrors = true;
                     this.errors = err;
@@ -88,7 +185,28 @@ export default {
         },
         cancelCreateTask() {
             this.$bvModal.hide('createTask');
+        },
+        setTask(task) {
+            this.task = task;
         }
     }
 }
 </script>
+
+<style scoped>
+.kanban {
+    position: fixed;
+    height: 100%;
+}
+
+.kanban-inner {
+    overflow-x: auto;
+    white-space: nowrap;
+    height: 100%;
+}
+
+.kanban-inner > .card {
+    display: inline-block;
+    float: none;
+}
+</style>

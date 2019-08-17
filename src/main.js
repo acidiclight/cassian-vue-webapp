@@ -101,6 +101,24 @@ const noElement = function(to, from, next) {
   });
 }
 
+const clearTask = function(to, from, next) {
+  state.dispatch('setTask', null).then(() => {
+    next();
+  });
+}
+
+const fetchTask = function(to, from, next) {
+  Vue.prototype.$api.getTask(state.state.project, to.params.id, (err, task) => {
+    if(task) {
+      state.dispatch('setTask', task).then(() => {
+        next();
+      });
+    } else {
+      next('/404');
+    }
+  });
+}
+
 const fetchElement = function(to, from, next) {
   Vue.prototype.$api.getElement(state.state.project, to.params.el, (err, el) => {
     if(el) {
@@ -131,7 +149,8 @@ const routes = [
       { path: '', component: About },
       { path: 'gdd', beforeEnter: noElement, component: DesignDoc },
       { path: 'gdd/:el', beforeEnter: fetchElement, component: DesignDoc },
-      { path: 'tasks', component: Tasks },
+      { path: 'tasks', component: Tasks, beforeEnter: clearTask, },
+      { path: 'tasks/:id', component: Tasks, beforeEnter: fetchTask, },
       { path: 'team', component: Team },
       {
         path: 'settings',

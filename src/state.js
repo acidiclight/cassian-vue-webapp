@@ -11,6 +11,7 @@ const state = {
   viewingProfile: null,
   darkMode: !!localStorage.getItem('darkMode'),
   element: null,
+  currentTask: null,
 };
 
 function parseJwt(token) {
@@ -24,6 +25,9 @@ function parseJwt(token) {
 const mutations = {
   setElement(s, element) {
     s.element=  element;
+  },
+  setTask(s, task) {
+    s.currentTask = task;
   },
   setToken(s, payload) {
     const { token } = payload;
@@ -55,6 +59,9 @@ const mutations = {
 const actions = {
   setElement(context, element) {
     context.commit('setElement', element);
+  },
+  setTask(context, task) {
+    context.commit('setTask', task);
   },
   login(context, payload) {
     context.commit('setToken', payload);
@@ -172,6 +179,7 @@ function isDev(s) {
 }
 
 const getters = {
+  currentTask(s) { return s.currentTask; },
   isAuthenticated(s) { return !!s.token && s.user; },
   status(s) { return s.status; },
   user(s) { return s.user; },

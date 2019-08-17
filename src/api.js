@@ -16,9 +16,18 @@ API.prototype.createElement = function(project, element, cb) {
       cb([ error.message ], false);
     });
 }
+API.prototype.getTask = function(project, id, cb) {
+  this.get(`/tasks/${project._id}/${id}`)
+    .then((response) => {
+      cb(response.data.errors, response.data.task);
+    })
+    .catch((error) => {
+      cb([ error.message ], false);
+    });
+}
 
 API.prototype.getTasks = function(project, cb) {
-  this.post(`/tasks/${project._id}`)
+  this.get(`/tasks/${project._id}`)
     .then((response) => {
       cb(response.data.errors, response.data.tasks);
     })
