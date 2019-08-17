@@ -17,6 +17,16 @@ API.prototype.createElement = function(project, element, cb) {
     });
 }
 
+API.prototype.getTasks = function(project, cb) {
+  this.post(`/tasks/${project._id}`)
+    .then((response) => {
+      cb(response.data.errors, response.data.tasks);
+    })
+    .catch((error) => {
+      cb([ error.message ], false);
+    });
+}
+
 API.prototype.getElement = function(project, id, cb) {
   this.get(`/elements/${project._id}/${id}`)
     .then((response) => {
@@ -106,6 +116,16 @@ API.prototype.interceptHttpRequests = function() {
     if (jwt) config.headers.Authorization = jwt;
     return config;
   });  
+}
+
+API.prototype.createTask = function(project, task, cb) {
+  this.post(`/tasks/${project._id}`, task)
+    .then((response) => {
+      cb(response.data.errors, response.data.task);
+    })
+    .catch((error) => {
+      cb([ error.message ], false);
+    });
 }
 
 API.prototype.get = function (url) {
