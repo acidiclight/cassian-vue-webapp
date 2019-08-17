@@ -95,6 +95,24 @@ const fetchUser = function(to, from, next) {
   });
 }
 
+const noElement = function(to, from, next) {
+  state.dispatch('setElement', null).then(() => {
+    next();
+  });
+}
+
+const fetchElement = function(to, from, next) {
+  Vue.prototype.$api.getElement(state.state.project, to.params.el, (err, el) => {
+    if(el) {
+      state.dispatch('setElement', el).then(() => {
+        next();
+      });
+    } else {
+      next('/404');
+    }
+  });
+}
+
 const routes = [
   { path: '/', component: Home },
   { 
@@ -111,7 +129,8 @@ const routes = [
     beforeEnter: fetchProject,
     children: [
       { path: '', component: About },
-      { path: 'gdd', component: DesignDoc },
+      { path: 'gdd', beforeEnter: noElement, component: DesignDoc },
+      { path: 'gdd/:el', beforeEnter: fetchElement, component: DesignDoc },
       { path: 'tasks', component: Tasks },
       { path: 'team', component: Team },
       {

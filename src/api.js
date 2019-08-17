@@ -7,6 +7,26 @@ const API = function (http, baseUrl) {
   this.interceptHttpRequests();
 };
 
+API.prototype.createElement = function(project, element, cb) {
+  this.post(`/elements/${project._id}`, element)
+    .then((response) => {
+      cb(response.data.errors, response.data.element || false);
+    })
+    .catch((error) => {
+      cb([ error.message ], false);
+    });
+}
+
+API.prototype.getElement = function(project, id, cb) {
+  this.get(`/elements/${project._id}/${id}`)
+    .then((response) => {
+      cb(response.data.errors, { element: response.data.element, children: response.data.children, parents: response.data.parents });
+    })
+    .catch((error) => {
+      cb([ error.message ], false);
+    })
+}
+
 API.prototype.createProject = function(project, cb) {
   this.post('/projects', project)
     .then((response) => {

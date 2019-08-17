@@ -10,6 +10,7 @@ const state = {
   project: null,
   viewingProfile: null,
   darkMode: !!localStorage.getItem('darkMode'),
+  element: null,
 };
 
 function parseJwt(token) {
@@ -21,6 +22,9 @@ function parseJwt(token) {
 }
 
 const mutations = {
+  setElement(s, element) {
+    s.element=  element;
+  },
   setToken(s, payload) {
     const { token } = payload;
     localStorage.setItem('user-token', token);
@@ -49,6 +53,9 @@ const mutations = {
 };
 
 const actions = {
+  setElement(context, element) {
+    context.commit('setElement', element);
+  },
   login(context, payload) {
     context.commit('setToken', payload);
   },
@@ -131,11 +138,37 @@ function isOwner(s) {
 }
 
 function isAdmin(s) {
-  return (s.user && s.project) && (isOwner(s) || s.project.admins.contains(s.user._id));
+  if(!!s.user) {
+    if(isOwner(s)) {
+      return true;
+    } else {
+      for(let admin of s.project.admins) {
+        if(admin == s.user._id) {
+          return true;
+        }
+      }
+      return false;
+    }
+  } else {
+    return false;
+  }
 }
 
 function isDev(s) {
-  return (s.user && s.project) && (isAdmin(s) || s.project.devs.contains(s.user._id));
+  if(!!s.user) {
+    if(isAdmin(s)) {
+      return true;
+    } else {
+      for(let dev of s.project.devs) {
+        if(dev == s.user._id) {
+          return true;
+        }
+      }
+      return false;
+    }
+  } else {
+    return false;
+  }
 }
 
 const getters = {
@@ -143,6 +176,7 @@ const getters = {
   status(s) { return s.status; },
   user(s) { return s.user; },
   project(s) { return s.project; },
+  currentElement(s) { return s.element; },
   userDisplayName(s) {
     if (!s.user) return '';
 
