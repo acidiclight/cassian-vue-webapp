@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="theme()">
+  <div id="app" :class="theme">
     <b-navbar toggleable="lg" type="dark" variant="dark" sticky>
       <b-navbar-brand to="/">Bit Phoenix Projects</b-navbar-brand>
         
@@ -51,7 +51,12 @@ import 'font-awesome/css/font-awesome.css';
 
 export default {
   name: 'app',
-  computed: mapGetters(['isAuthenticated', 'user', 'userDisplayName', 'darkMode']),
+  computed: {
+    ...mapGetters(['isAuthenticated', 'user', 'userDisplayName', 'darkMode']),
+    theme() {
+      return this.darkMode ? 'theme-dark' : 'theme-light';
+    }
+  },
   mounted() {
     this.$store.dispatch('validateUser');
     this.setDarkMode();
@@ -84,9 +89,6 @@ export default {
           return 'You are not a developer of that project.';
           break;
       }
-    },
-    theme() {
-      return this.darkMode ? 'theme-dark' : 'theme-light';
     }
   },
 };
